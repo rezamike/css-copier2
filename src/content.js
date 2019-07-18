@@ -4,10 +4,12 @@ import ReactDOM from 'react-dom';
 import "./content.css";
 
 class Main extends React.Component {
+
+
     render() {
         return (
             <div className={'my-extension'}>
-                <h1>Hello world - My first Extension</h1>
+                <h1></h1>
             </div>
         )
     }
@@ -33,6 +35,11 @@ function toggle(){
      app.style.display = "none";
    }
 
-   const info = JSON.stringify(document.styleSheets);
+   var info = document.styleSheets;
+   console.log(info)
+   for (var i = 0; i < info.length; i++) {
+     console.log(info[i]);
+   }
+
    document.querySelector(".my-extension").innerHTML = info;
 }
