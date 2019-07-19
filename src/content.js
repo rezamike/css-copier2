@@ -31,28 +31,35 @@ function pullOurData() {
   var moreInfo;
   var moreMoreInfo;
   var selectorText;
+  var main;
   var thisOne = [];
   var thatOne = [];
+  var mashUp = {};
 
   for (var i = 0; i < info.length; i++) {
     moreInfo = info[i].rules;
 
     for (var i = 0; i < moreInfo.length; i++) {
       moreMoreInfo = moreInfo[i].style;
-      selectorText = moreInfo[i].selectorText.toString();
+      selectorText = moreInfo[i].selectorText;
 
       if (typeof moreMoreInfo === "undefined") {
         break;
       } else {
-        thatOne.push(moreMoreInfo.cssText)
-        thisOne.push({ selectorText: thatOne });
-        break;
+        thatOne.push(moreMoreInfo.cssText);
       }
+      if (typeof selectorText === "undefined" || selectorText == null) {
+        break;
+      } else {
+        thisOne.push(selectorText);
+      }
+      mashUp[thisOne[i]] = thatOne[i];
     }
+    console.log(mashUp);
+    main = JSON.stringify(mashUp);
   }
 
-  console.log(thisOne);
-  return thisOne;
+  return main.replace('","', "\n");
 };
 function toggle(){
   if(app.style.display === "none"){
