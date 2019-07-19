@@ -9,10 +9,9 @@
     "content.js": "/static/js/content.js",
     "content.js.map": "/static/js/content.js.map",
     "index.html": "/index.html",
-    "precache-manifest.5c82fd31ff4ad60fcd12976e194f2311.js": "/precache-manifest.5c82fd31ff4ad60fcd12976e194f2311.js",
+    "precache-manifest.2f04cef893e50d2ba56a13f90d930fe8.js": "/precache-manifest.2f04cef893e50d2ba56a13f90d930fe8.js",
     "service-worker.js": "/service-worker.js",
     "static/css/app.css.map": "/static/css/app.css.map",
-    "static/css/content.css.map": "/static/css/content.css.map",
-    "static/media/logo.svg": "/static/media/logo.5d5d9eef.svg"
+    "static/css/content.css.map": "/static/css/content.css.map"
   }
 }

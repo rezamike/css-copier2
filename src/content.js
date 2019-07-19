@@ -2,12 +2,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import "./content.css";
+import App from "./App.js";
 
 class Main extends React.Component {
 
   render() {
+
     return (
       <div className={'my-extension'}>
+        <App />
       </div>
     )
   }
@@ -20,11 +23,11 @@ ReactDOM.render(<Main />, app);
 
 app.style.display = "none";
 chrome.runtime.onMessage.addListener(
-   function(request, sender, sendResponse) {
-      if( request.message === "clicked_browser_action") {
-        toggle();
-      }
-   }
+  function (request, sender, sendResponse) {
+    if (request.message === "clicked_browser_action") {
+      toggle();
+    }
+  }
 );
 function pullOurData() {
   const info = document.styleSheets;
@@ -37,36 +40,42 @@ function pullOurData() {
   var mashUp = {};
 
   for (var i = 0; i < info.length; i++) {
-    moreInfo = info[i].rules;
 
-    for (var i = 0; i < moreInfo.length; i++) {
-      moreMoreInfo = moreInfo[i].style;
-      selectorText = moreInfo[i].selectorText;
+    try {
+      moreInfo = info[i].rules;
 
-      if (typeof moreMoreInfo === "undefined") {
-        break;
-      } else {
-        thatOne.push(moreMoreInfo.cssText);
+      for (var j = 0; j < moreInfo.length; j++) {
+        moreMoreInfo = moreInfo[j].style;
+        selectorText = moreInfo[j].selectorText;
+
+        if (typeof moreMoreInfo === "undefined") {
+          break;
+        } else {
+          thatOne.push(moreMoreInfo.cssText);
+        }
+        if (typeof selectorText === "undefined" || selectorText == null) {
+          break;
+        } else {
+          thisOne.push(selectorText);
+        }
+        mashUp[thisOne[j]] = thatOne[j];
       }
-      if (typeof selectorText === "undefined" || selectorText == null) {
-        break;
-      } else {
-        thisOne.push(selectorText);
-      }
-      mashUp[thisOne[i]] = thatOne[i];
+
+      main = JSON.stringify(mashUp);
+    } catch (err) {
+      console.log(`You gone and fucked up, cowpoke... Here's the problem with what you did: \n ${err}`);
+      continue;
     }
-    console.log(mashUp);
-    main = JSON.stringify(mashUp);
   }
 
-  return main.replace('","', "\n");
+  console.log(mashUp);
+  return main;
 };
-function toggle(){
-  if(app.style.display === "none"){
+function toggle() {
+  if (app.style.display === "none") {
     app.style.display = "block";
+    pullOurData();
   } else {
     app.style.display = "none";
   }
-
-  document.querySelector(".my-extension").innerHTML = pullOurData();
 };
