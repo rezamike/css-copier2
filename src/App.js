@@ -12,14 +12,8 @@ const useStyles = makeStyles({
     flexGrow: 1
   },
   card: {
-    minWidth: 275,
-    justifyContent: 'center',
-    alignSelf: 'center'
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
+    width: '75%',
+    height: '25%'
   },
   title: {
     fontSize: 14,
@@ -31,7 +25,6 @@ const useStyles = makeStyles({
 
 function App() {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
 
   return (
     <div className="App">
@@ -44,7 +37,7 @@ function App() {
           </Toolbar>
         </AppBar>
       </div>
-      <div style={{display: 'flex'}}>
+      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
