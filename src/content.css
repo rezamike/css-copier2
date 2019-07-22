@@ -1,12 +1,14 @@
 .my-extension {
     padding: 5px;
+    height: 100%;
+    overflow: auto;
  }
  .my-extension h1 {
      color: #000;
  }
  .poop {
-     background-color: white;
-     padding: 5px;
-     width: 80%;
+    background-color: white;
+    padding: 5px;
+    width: 80%;
     border-radius: 10px;
  }
