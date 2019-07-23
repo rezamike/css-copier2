@@ -29,6 +29,14 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.message === "store_css") {
+      console.log(`how do we save this... \n ${pullOurData()}`)
+    }
+  }
+);
+
 function pullOurData() {
   const info = document.styleSheets;
   var moreInfo;
@@ -71,6 +79,7 @@ function pullOurData() {
   console.log(mashUp);
   return main;
 };
+
 function toggle() {
   if (app.style.display === "none") {
     app.style.display = "block";

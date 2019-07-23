@@ -1,9 +1,9 @@
 #my-extension-root {
   width: 25%;
-  height: 30vh;
+  height: 100vh;
   position: fixed;
   top: 0%;
-  right: 15%;
+  right: 0%;
   z-index: 2147483647;
   background-color: slategray;
   box-shadow: 0px 0px 5px #0000009e;
