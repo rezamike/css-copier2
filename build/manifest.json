@@ -12,6 +12,10 @@
       "css": ["/static/css/app.css", "/static/css/content.css"],
       "js": ["/static/js/0.chunk.js", "/static/js/content.js"]
     }
-],
+  ],
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
   "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
 }
