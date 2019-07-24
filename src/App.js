@@ -47,6 +47,7 @@ function App() {
             <Typography className={classes.title} color="textSecondary" gutterBottom>
               Not Done Yet.... BUT SOON, MY DUDE!
             </Typography>
+            <Button variant='contained' color='primary' id='start' className={classes.button}>Start</Button>
           </CardContent>
         </Card>
       </div>
