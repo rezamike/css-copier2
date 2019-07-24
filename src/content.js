@@ -7,7 +7,6 @@ import App from "./App.js";
 class Main extends React.Component {
 
   render() {
-
     return (
       <div className={'my-extension'}>
         <App />
@@ -22,24 +21,35 @@ document.body.appendChild(app);
 ReactDOM.render(<Main />, app);
 
 app.style.display = "none";
+
+
+app.querySelector("#start").addEventListener("click", () => {
+  saveChanges();
+
+  setTimeout(getValue, 1000);
+});
+
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.message === "clicked_browser_action") {
       toggle();
-      setTimeout(getValue, 3000);
     }
   }
 );
 
-function saveChanges(data) {
-  var theValue = data;
-  if (!theValue) {
-    console.log('Error: No value specified');
-    return;
+function saveChanges() {
+  try {
+    var theValue = pullOurData();
+    if (!theValue) {
+      console.log('Error: No value specified');
+      return;
+    }
+    chrome.storage.local.set({key: theValue}, function() {
+      console.log('Settings saved');
+    });
+  } catch (e) {
+    console.error(`In that moment he knew, he fucked up... \n${e}`);
   }
-  chrome.storage.local.set({key: theValue}, function() {
-    console.log('Settings saved');
-  });
 };
 
 function getValue() {
@@ -49,7 +59,7 @@ function getValue() {
 };
 
 function pullOurData() {
-  const info = document.styleSheets;
+  var info = document.styleSheets;
   var moreInfo;
   var moreMoreInfo;
   var selectorText;
@@ -57,11 +67,14 @@ function pullOurData() {
   var thisOne = [];
   var thatOne = [];
   var mashUp = {};
+  var index = 0;
+  var rules = 0;
 
   for (var i = 0; i < info.length; i++) {
 
     try {
       moreInfo = info[i].rules;
+      index++;
 
       for (var j = 0; j < moreInfo.length; j++) {
         moreMoreInfo = moreInfo[j].style;
@@ -71,6 +84,7 @@ function pullOurData() {
           break;
         } else {
           thatOne.push(moreMoreInfo.cssText);
+          rules++;
         }
         if (typeof selectorText === "undefined" || selectorText == null) {
           break;
@@ -80,22 +94,21 @@ function pullOurData() {
         mashUp[thisOne[j]] = thatOne[j];
       }
 
-      main = JSON.stringify(mashUp);
-    } catch (err) {
-      console.log(`You gone and fucked up, cowpoke... Here's the problem with what you did: \n ${err}`);
+      main = mashUp;
+    } catch (e) {
+      console.error(`In that moment he knew, he fucked up... \n${e}`);
       continue;
     }
   }
 
-  saveChanges(mashUp);
-  
+  console.log(`StyleSheets: ${index}`);
+  console.log(`Rules: ${rules}`);
   return main;
 };
 
 function toggle() {
   if (app.style.display === "none") {
     app.style.display = "block";
-    pullOurData();
   } else {
     app.style.display = "none";
   }
