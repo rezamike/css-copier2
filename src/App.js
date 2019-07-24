@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
   root: {
@@ -20,6 +21,9 @@ const useStyles = makeStyles({
   },
   pos: {
     marginBottom: 12,
+  },
+  button: {
+    margin: 1,
   },
 });
 
@@ -37,7 +41,7 @@ function App() {
           </Toolbar>
         </AppBar>
       </div>
-      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} color="textSecondary" gutterBottom>

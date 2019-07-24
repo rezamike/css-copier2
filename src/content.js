@@ -26,16 +26,27 @@ chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.message === "clicked_browser_action") {
       toggle();
+      setTimeout(getValue, 3000);
     }
   }
 );
-chrome.runtime.onMessage.addListener(
-  function (request, sender, sendResponse) {
-    if (request.message === "store_css") {
-      console.log(`how do we save this... \n ${pullOurData()}`)
-    }
+
+function saveChanges(data) {
+  var theValue = data;
+  if (!theValue) {
+    console.log('Error: No value specified');
+    return;
   }
-);
+  chrome.storage.local.set({key: theValue}, function() {
+    console.log('Settings saved');
+  });
+};
+
+function getValue() {
+  chrome.storage.local.get(['key'], (result) => {
+    console.log(result.key);
+  });
+};
 
 function pullOurData() {
   const info = document.styleSheets;
@@ -76,7 +87,8 @@ function pullOurData() {
     }
   }
 
-  console.log(mashUp);
+  saveChanges(mashUp);
+  
   return main;
 };
 
