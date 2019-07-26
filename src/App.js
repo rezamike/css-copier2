@@ -48,6 +48,7 @@ function App() {
               Not Done Yet.... BUT SOON, MY DUDE!
             </Typography>
             <Button variant='contained' color='primary' id='start' className={classes.button}>Start</Button>
+            <Button variant='contained' color='secondary' id='end' className={classes.button}>End</Button>
           </CardContent>
         </Card>
       </div>
