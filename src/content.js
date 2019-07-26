@@ -26,6 +26,8 @@ app.style.display = "none";
 app.querySelector("#start").addEventListener("click", () => {
   saveChanges();
 
+});
+app.querySelector("#end").addEventListener("click", () => {
   setTimeout(getValue, 1000);
 });
 
@@ -54,7 +56,7 @@ function saveChanges() {
 
 function getValue() {
   chrome.storage.local.get(['key'], (result) => {
-    console.log(result.key);
+    console.log(JSON.parse(result.key));
   });
 };
 
@@ -71,30 +73,33 @@ function pullOurData() {
   var rules = 0;
 
   for (var i = 0; i < info.length; i++) {
-
     try {
       moreInfo = info[i].rules;
       index++;
+      console.log("scraping through sheets", moreInfo)
 
       for (var j = 0; j < moreInfo.length; j++) {
         moreMoreInfo = moreInfo[j].style;
         selectorText = moreInfo[j].selectorText;
+        console.log("scraping through rules", moreMoreInfo)
 
         if (typeof moreMoreInfo === "undefined") {
           break;
         } else {
           thatOne.push(moreMoreInfo.cssText);
+          console.log("adding css props", moreMoreInfo.cssText)
           rules++;
         }
         if (typeof selectorText === "undefined" || selectorText == null) {
           break;
         } else {
           thisOne.push(selectorText);
+          console.log("adding prop name", selectorText)
         }
         mashUp[thisOne[j]] = thatOne[j];
       }
 
-      main = mashUp;
+      main = JSON.stringify(mashUp);
     } catch (e) {
       console.error(`In that moment he knew, he fucked up... \n${e}`);
       continue;
