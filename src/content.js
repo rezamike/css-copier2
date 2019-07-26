@@ -1,32 +1,53 @@
 /*global chrome*/
-import React from 'react';
-import ReactDOM from 'react-dom';
-import "./content.css";
-import App from "./App.js";
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import "./content.css";
+// import App from "./App.js";
 
-class Main extends React.Component {
+// class Main extends React.Component {
+//   constructor() {
+//     super()
 
-  render() {
+//     this.pullOurData = this.pullOurData.bind(this);
+//   }
 
-    return (
-      <div className={'my-extension'}>
-        <App />
-      </div>
-    )
-  }
-}
+//   render() {
 
-const app = document.createElement('div');
-app.id = "my-extension-root";
-document.body.appendChild(app);
-ReactDOM.render(<Main />, app);
+//     return (
+//       <div className={'my-extension'}>
+//         <App />
+//       </div>
+//     )
+//   }
+// }
 
-app.style.display = "none";
+// const app = document.createElement('div');
+// app.id = "my-extension-root";
+// document.body.appendChild(app);
+// ReactDOM.render(<Main />, app);
+
+// app.style.display = "none";
+// chrome.runtime.onMessage.addListener(
+//   function (request, sender, sendResponse) {
+//     if (request.message === "clicked_browser_action") {
+//       // toggle();
+//       // setTimeout(getValue, 3000);
+//     }
+//   }
+// );
+
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    if (request.message === "clicked_browser_action") {
-      toggle();
-      setTimeout(getValue, 3000);
+    if (request.message === "startScrape") {
+      pullOurData();
+    }
+  }
+);
+
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.message === "lastScrape") {
+      getValue();
     }
   }
 );
@@ -44,8 +65,12 @@ function saveChanges(data) {
 
 function getValue() {
   chrome.storage.local.get(['key'], (result) => {
-    console.log(result.key);
+    console.log(JSON.parse(result.key));
   });
+};
+
+function compareData() {
+
 };
 
 function pullOurData() {
@@ -53,7 +78,8 @@ function pullOurData() {
   var moreInfo;
   var moreMoreInfo;
   var selectorText;
-  var main;
+  var selectorStyle;
+  var main ={};
   var thisOne = [];
   var thatOne = [];
   var mashUp = {};
@@ -61,42 +87,64 @@ function pullOurData() {
   for (var i = 0; i < info.length; i++) {
 
     try {
-      moreInfo = info[i].rules;
+      if (info[i].href.indexOf(window.location.host) !== -1) {
+        moreInfo = info[i].rules;
 
-      for (var j = 0; j < moreInfo.length; j++) {
-        moreMoreInfo = moreInfo[j].style;
-        selectorText = moreInfo[j].selectorText;
+        // console.log("CHECKING THE CSSSSSSSSSS", moreInfo)
+  
+        for (var j = 0; j < moreInfo.length; j++) {
+          selectorText = moreInfo[j].selectorText;
+          selectorStyle = moreInfo[j].style;
 
-        if (typeof moreMoreInfo === "undefined") {
-          break;
-        } else {
-          thatOne.push(moreMoreInfo.cssText);
+          if (typeof selectorStyle !== "undefined") {
+            console.log("CHECK CHECK ....... ", selectorText, 'STYLE.....', selectorStyle["cssText"]);
+            main[selectorText] = selectorStyle["cssText"];
+          }
         }
-        if (typeof selectorText === "undefined" || selectorText == null) {
-          break;
-        } else {
-          thisOne.push(selectorText);
-        }
-        mashUp[thisOne[j]] = thatOne[j];
       }
-
-      main = JSON.stringify(mashUp);
-    } catch (err) {
-      console.log(`You gone and fucked up, cowpoke... Here's the problem with what you did: \n ${err}`);
+    } catch (e) {
+      console.warn("Can't read the css rules of: " + info[i].href, e);
       continue;
     }
+
+    // try {
+    //   moreInfo = info[i].rules;
+
+    //   for (var j = 0; j < moreInfo.length; j++) {
+    //     moreMoreInfo = moreInfo[j].style;
+    //     selectorText = moreInfo[j].selectorText;
+
+    //     if (typeof moreMoreInfo === "undefined") {
+    //       break;
+    //     } else {
+    //       thatOne.push(moreMoreInfo.cssText);
+    //     }
+    //     if (typeof selectorText === "undefined" || selectorText == null) {
+    //       break;
+    //     } else {
+    //       thisOne.push(selectorText);
+    //     }
+    //     mashUp[thisOne[j]] = thatOne[j];
+    //   }
+
+    //   main = JSON.stringify(mashUp);
+    // } catch (err) {
+    //   console.log(`You gone and fucked up, cowpoke... Here's the problem with what you did: \n ${err}`);
+    //   continue;
+    // }
   }
 
-  saveChanges(mashUp);
+  // saveChanges(mashUp);
+  saveChanges(JSON.stringify(main));
   
-  return main;
+  // return main;
 };
 
-function toggle() {
-  if (app.style.display === "none") {
-    app.style.display = "block";
-    pullOurData();
-  } else {
-    app.style.display = "none";
-  }
-};
+// function toggle() {
+//   if (app.style.display === "none") {
+//     app.style.display = "block";
+//     // pullOurData();
+//   } else {
+//     app.style.display = "none";
+//   }
+// };

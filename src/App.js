@@ -1,3 +1,4 @@
+/*global chrome*/
 import React from 'react';
 import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
@@ -28,7 +29,32 @@ const useStyles = makeStyles({
 });
 
 function App() {
+// class App extends React.Component {
   const classes = useStyles();
+
+  function initialScrape() {
+    chrome.tabs.query({
+        active: true,
+        currentWindow: true
+    }, function (tabs) {
+        var activeTab = tabs[0];
+        chrome.tabs.sendMessage(activeTab.id, {
+            "message": "startScrape"
+        });
+    });
+  }
+
+  function scrapeAndCompare() {
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true
+  }, function (tabs) {
+      var activeTab = tabs[0];
+      chrome.tabs.sendMessage(activeTab.id, {
+          "message": "lastScrape"
+      });
+  });
+  }
 
   return (
     <div className="App">
@@ -45,8 +71,14 @@ function App() {
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
-              Not Done Yet.... BUT SOON, MY DUDE!
+              POTENTIAL LIST
             </Typography>
+            <Button onClick={initialScrape} size="large" variant="contained" color="primary" className={classes.button}>
+              START
+            </Button>
+            <Button onClick={scrapeAndCompare} id="stopScrape" size="large" variant="contained" color="secondary" className={classes.button}>
+              STOP
+            </Button>
           </CardContent>
         </Card>
       </div>

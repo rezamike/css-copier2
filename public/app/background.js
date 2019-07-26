@@ -19,7 +19,7 @@ chrome.storage.onChanged.addListener(function (tab) {
         function (tabs) {
             var activeTab = tabs[0];
             chrome.tabs.sendMessage(activeTab.id, {
-                "message": "store_css"
+                "message": "startScrape"
             });
         });
 });
