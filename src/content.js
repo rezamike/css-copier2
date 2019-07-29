@@ -39,7 +39,8 @@
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.message === "startScrape") {
-      pullOurData();
+      var data = JSON.stringify(pullOurData());
+      saveChanges(data);
     }
   }
 );
@@ -47,7 +48,10 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.message === "lastScrape") {
-      getValue();
+      getValue(compareData);
+      // var storedData = getValue();
+      // console.log("IS THIS WORKING?????", storedData);
+      // compareData();
     }
   }
 );
@@ -63,14 +67,28 @@ function saveChanges(data) {
   });
 };
 
-function getValue() {
+function getValue(compareData) {
   chrome.storage.local.get(['key'], (result) => {
-    console.log(JSON.parse(result.key));
+    compareData(JSON.parse(result.key));
+    // return JSON.parse(result.key);
   });
 };
 
-function compareData() {
+function compareData(data) {
+  var newData = pullOurData();
+  var updatedCSS = {};
+  console.log("THIS IS THE NEW NEW", newData);
+  console.log("PLEASE WORK PLEASE", data);
 
+  for (var selector in newData) {
+    if (data.hasOwnProperty(selector)) {
+      if (newData[selector] !== data[selector]) {
+        updatedCSS[selector] = newData[selector];
+      }
+    }
+  }
+
+  console.log("THESE ARE THE UPDATED CSS ========", updatedCSS);
 };
 
 function pullOurData() {
@@ -97,7 +115,7 @@ function pullOurData() {
           selectorStyle = moreInfo[j].style;
 
           if (typeof selectorStyle !== "undefined") {
-            console.log("CHECK CHECK ....... ", selectorText, 'STYLE.....', selectorStyle["cssText"]);
+            // console.log("CHECK CHECK ....... ", selectorText, 'STYLE.....', selectorStyle["cssText"]);
             main[selectorText] = selectorStyle["cssText"];
           }
         }
@@ -135,7 +153,7 @@ function pullOurData() {
   }
 
   // saveChanges(mashUp);
-  saveChanges(JSON.stringify(main));
+  return main;
   
   // return main;
 };
