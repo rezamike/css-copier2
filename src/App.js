@@ -51,6 +51,9 @@ function App() {
             <Button variant='contained' color='secondary' id='end' className={classes.button}>End</Button>
           </CardContent>
         </Card>
+        <Card className={classes.card}>
+          <div id="theList"></div>
+        </Card>
       </div>
     </div>
   );
