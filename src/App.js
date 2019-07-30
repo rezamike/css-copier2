@@ -1,3 +1,5 @@
+/*global chrome*/
+
 import React from 'react';
 import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,7 +16,8 @@ const useStyles = makeStyles({
   },
   card: {
     width: '75%',
-    height: '25%'
+    height: '25%',
+    textAlign: 'center'
   },
   title: {
     fontSize: 14,
@@ -26,6 +29,45 @@ const useStyles = makeStyles({
     margin: 1,
   },
 });
+
+function trigger_slider() {
+  chrome.tabs.query({
+          active: true,
+          currentWindow: true
+      },
+      function (tabs) {
+          var activeTab = tabs[0];
+          chrome.tabs.sendMessage(activeTab.id, {
+              "message": "trigger_slider"
+          });
+      });
+};
+
+function start_scrape() {
+  chrome.tabs.query({
+          active: true,
+          currentWindow: true
+      },
+      function (tabs) {
+          var activeTab = tabs[0];
+          chrome.tabs.sendMessage(activeTab.id, {
+              "message": "start_scrape"
+          });
+      });
+};
+
+function save_diff() {
+  chrome.tabs.query({
+          active: true,
+          currentWindow: true
+      },
+      function (tabs) {
+          var activeTab = tabs[0];
+          chrome.tabs.sendMessage(activeTab.id, {
+              "message": "save_diff"
+          });
+      });
+};
 
 function App() {
   const classes = useStyles();
@@ -47,12 +89,9 @@ function App() {
             <Typography className={classes.title} color="textSecondary" gutterBottom>
               Not Done Yet.... BUT SOON, MY DUDE!
             </Typography>
-            <Button variant='contained' color='primary' id='start' className={classes.button}>Start</Button>
-            <Button variant='contained' color='secondary' id='end' className={classes.button}>End</Button>
+            <Button variant='contained' color='primary' id='start' className={classes.button} onClick={start_scrape} >Start</Button>
+            <Button variant='contained' color='secondary' id='end' className={classes.button} onClick={save_diff} >End</Button>
           </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <div id="theList"></div>
         </Card>
       </div>
     </div>

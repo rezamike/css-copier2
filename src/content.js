@@ -24,25 +24,39 @@ app.style.display = 'none';
 var app_core = {};
 
 
-app.querySelector('#start').addEventListener('click', function() {
-  var data = app_core.css_scrape();
-  app_core.save_scrape(data);
-});
-
-app.querySelector('#end').addEventListener('click', function() {
-  setTimeout(function() {
-    app_core.from_storage();
-  }, 1000);
-});
 
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if (request.message === 'clicked_browser_action') {
+  function (request, sender, sendResponse) {
+    if (request.message === 'trigger_slider') {
       app_core.toggle();
     }
   });
 
-app_core.save_scrape = function(data) {
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.message === 'start_scrape') {
+      var data = app_core.css_scrape();
+      app_core.save_scrape(data);
+    }
+  });
+
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.message === 'save_diff') {
+      setTimeout(function () {
+        app_core.from_storage();
+      }, 1000);
+    }
+  });
+
+// chrome.runtime.onMessage.addListener(
+//   function(request, sender, sendResponse) {
+//     if (request.message === 'clicked_browser_action') {
+//       app_core.toggle();
+//     }
+//   });
+
+app_core.save_scrape = function (data) {
   var theValue = data;
 
   if (!theValue) {
@@ -50,12 +64,12 @@ app_core.save_scrape = function(data) {
     return;
   }
 
-  chrome.storage.local.set({key: theValue}, function() {
+  chrome.storage.local.set({ key: theValue }, function () {
     console.log('First scrape settings saved', theValue);
   });
 };
 
-app_core.final_scrape = function(data) {
+app_core.final_scrape = function (data) {
   var theValue = data;
   var version = 1;
   var site = window.location.host;
@@ -69,18 +83,18 @@ app_core.final_scrape = function(data) {
     return;
   }
 
-  chrome.storage.local.set({[newKey]: theValue}, function() {
+  chrome.storage.local.set({ [newKey]: theValue }, function () {
     console.log('Final comparison saved', theValue);
   });
 };
 
-app_core.from_storage = function() {
-  chrome.storage.local.get(['key'], function(result) {
+app_core.from_storage = function () {
+  chrome.storage.local.get(['key'], function (result) {
     app_core.compare_data(result.key);
   });
 };
 
-app_core.compare_data = function(data) {
+app_core.compare_data = function (data) {
   var newData = app_core.css_scrape();
   var updatedCSS = {};
 
@@ -95,7 +109,7 @@ app_core.compare_data = function(data) {
   app_core.final_scrape(updatedCSS);
 };
 
-app_core.css_scrape = function() {
+app_core.css_scrape = function () {
   var info = document.styleSheets;
   var moreInfo;
   var moreMoreInfo;
@@ -138,7 +152,7 @@ app_core.css_scrape = function() {
   return main;
 };
 
-app_core.toggle = function() {
+app_core.toggle = function () {
   if (app.style.display === 'none') {
     app.style.display = 'block';
   } else {
