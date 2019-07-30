@@ -34,13 +34,13 @@ function App() {
 
   function initialScrape() {
     chrome.tabs.query({
-        active: true,
-        currentWindow: true
+      active: true,
+      currentWindow: true
     }, function (tabs) {
-        var activeTab = tabs[0];
-        chrome.tabs.sendMessage(activeTab.id, {
-            "message": "startScrape"
-        });
+      var activeTab = tabs[0];
+      chrome.tabs.sendMessage(activeTab.id, {
+        "message": "startScrape"
+      });
     });
   }
 
@@ -48,12 +48,12 @@ function App() {
     chrome.tabs.query({
       active: true,
       currentWindow: true
-  }, function (tabs) {
+    }, function (tabs) {
       var activeTab = tabs[0];
       chrome.tabs.sendMessage(activeTab.id, {
-          "message": "lastScrape"
+        "message": "lastScrape"
       });
-  });
+    });
   }
 
   return (

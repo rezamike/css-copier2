@@ -49,9 +49,6 @@ chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.message === "lastScrape") {
       getValue(compareData);
-      // var storedData = getValue();
-      // console.log("IS THIS WORKING?????", storedData);
-      // compareData();
     }
   }
 );
@@ -66,6 +63,25 @@ function saveChanges(data) {
     console.log('Settings saved');
   });
 };
+
+function finalSave(data) {
+  var theValue = data;
+  var version = 1;
+  var site = window.location.host
+  var newKey = site + " version: " + version;
+  theValue["site"] = site;
+  theValue["version"] = version;
+  console.log("LAST SAVE TO CHROME.STORAGE for ", window.location.host, " with these data...... ", theValue);
+
+  if (!theValue) {
+    console.log('Error: No value specified');
+    return;
+  }
+
+  chrome.storage.local.set({[newKey]: theValue}, function() {
+    console.log('Settings saved');
+  });
+}
 
 function getValue(compareData) {
   chrome.storage.local.get(['key'], (result) => {
@@ -88,7 +104,7 @@ function compareData(data) {
     }
   }
 
-  console.log("THESE ARE THE UPDATED CSS ========", updatedCSS);
+  finalSave(updatedCSS);
 };
 
 function pullOurData() {
