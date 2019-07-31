@@ -7,6 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import app_core from './app_core';
 
 const styles = {
   root: {
@@ -30,44 +31,6 @@ const styles = {
   }
 };
 
-function trigger_slider() {
-  chrome.tabs.query({
-    active: true,
-    currentWindow: true
-  },
-    function (tabs) {
-      var activeTab = tabs[0];
-      chrome.tabs.sendMessage(activeTab.id, {
-        "message": "trigger_slider"
-      });
-    });
-};
-
-function start_scrape() {
-  chrome.tabs.query({
-    active: true,
-    currentWindow: true
-  },
-    function (tabs) {
-      var activeTab = tabs[0];
-      chrome.tabs.sendMessage(activeTab.id, {
-        "message": "start_scrape"
-      });
-    });
-};
-
-function save_diff() {
-  chrome.tabs.query({
-    active: true,
-    currentWindow: true
-  },
-    function (tabs) {
-      var activeTab = tabs[0];
-      chrome.tabs.sendMessage(activeTab.id, {
-        "message": "save_diff"
-      });
-    });
-};
 
 function App() {
 
@@ -83,9 +46,13 @@ function App() {
         </AppBar>
       </div>
       <Grid container spacing={12} style={styles.soonList} />
-      <Grid container spacing={6} style={styles.buttons}>
-        <Button variant='contained' color='primary' id='start' style={styles.button} onClick={start_scrape}>Start</Button>
-        <Button variant='contained' color='secondary' id='end' style={styles.button} onClick={save_diff}>End</Button>
+      <Grid container spacing={12} style={styles.buttons}>
+        <Grid item xs={6}>
+          <Button variant='contained' color='primary' id='start' style={styles.button} onClick={app_core.start_scrape}>Start</Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button variant='contained' color='secondary' id='end' style={styles.button} onClick={app_core.save_diff}>End</Button>
+        </Grid>
       </Grid>
     </div>
   );
