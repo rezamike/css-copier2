@@ -2,22 +2,15 @@
 
 import React from 'react';
 import './App.css';
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
-const useStyles = makeStyles({
+const styles = {
   root: {
     flexGrow: 1
-  },
-  card: {
-    width: '75%',
-    height: '25%',
-    textAlign: 'center'
   },
   title: {
     fontSize: 14,
@@ -28,72 +21,72 @@ const useStyles = makeStyles({
   button: {
     margin: 1,
   },
-});
+  soonList: {
+    height: '60%'
+  },
+  buttons: {
+    textAlign: 'center',
+    height: '20%'
+  }
+};
 
 function trigger_slider() {
   chrome.tabs.query({
-          active: true,
-          currentWindow: true
-      },
-      function (tabs) {
-          var activeTab = tabs[0];
-          chrome.tabs.sendMessage(activeTab.id, {
-              "message": "trigger_slider"
-          });
+    active: true,
+    currentWindow: true
+  },
+    function (tabs) {
+      var activeTab = tabs[0];
+      chrome.tabs.sendMessage(activeTab.id, {
+        "message": "trigger_slider"
       });
+    });
 };
 
 function start_scrape() {
   chrome.tabs.query({
-          active: true,
-          currentWindow: true
-      },
-      function (tabs) {
-          var activeTab = tabs[0];
-          chrome.tabs.sendMessage(activeTab.id, {
-              "message": "start_scrape"
-          });
+    active: true,
+    currentWindow: true
+  },
+    function (tabs) {
+      var activeTab = tabs[0];
+      chrome.tabs.sendMessage(activeTab.id, {
+        "message": "start_scrape"
       });
+    });
 };
 
 function save_diff() {
   chrome.tabs.query({
-          active: true,
-          currentWindow: true
-      },
-      function (tabs) {
-          var activeTab = tabs[0];
-          chrome.tabs.sendMessage(activeTab.id, {
-              "message": "save_diff"
-          });
+    active: true,
+    currentWindow: true
+  },
+    function (tabs) {
+      var activeTab = tabs[0];
+      chrome.tabs.sendMessage(activeTab.id, {
+        "message": "save_diff"
       });
+    });
 };
 
 function App() {
-  const classes = useStyles();
 
   return (
     <div className="App">
-      <div className={classes.root}>
+      <div style={styles.root}>
         <AppBar position="static" color="primary">
           <Toolbar>
-            <Typography variant="h4" color="default">
+            <Typography variant="h5" color="default">
               CSS Copier
             </Typography>
           </Toolbar>
         </AppBar>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
-              Not Done Yet.... BUT SOON, MY DUDE!
-            </Typography>
-            <Button variant='contained' color='primary' id='start' className={classes.button} onClick={start_scrape} >Start</Button>
-            <Button variant='contained' color='secondary' id='end' className={classes.button} onClick={save_diff} >End</Button>
-          </CardContent>
-        </Card>
-      </div>
+      <Grid container spacing={12} style={styles.soonList} />
+      <Grid container spacing={6} style={styles.buttons}>
+        <Button variant='contained' color='primary' id='start' style={styles.button} onClick={start_scrape}>Start</Button>
+        <Button variant='contained' color='secondary' id='end' style={styles.button} onClick={save_diff}>End</Button>
+      </Grid>
     </div>
   );
 }
