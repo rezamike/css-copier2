@@ -74,23 +74,20 @@ app_core.css_scrape = function () {
     var thatOne = [];
     var mashUp = {};
 
-    for (var i = 0; i < info.length; i++) {
-        try {
+    try {
+        for (var i = 0; i < info.length; i++) {
+
             moreInfo = info[i].rules;
 
+            console.log(moreInfo, i)
             for (var j = 0; j < moreInfo.length; j++) {
                 moreMoreInfo = moreInfo[j].style;
                 selectorText = moreInfo[j].selectorText;
 
-                if (typeof moreMoreInfo === 'undefined') {
-                    break;
-                } else {
-                    thatOne.push(moreMoreInfo.cssText);
-                }
+                if (typeof moreMoreInfo !== 'undefined' && (typeof selectorText !== 'undefined' || selectorText != null)) {
+                    console.log(moreMoreInfo.cssText, selectorText, j)
 
-                if (typeof selectorText === 'undefined' || selectorText == null) {
-                    break;
-                } else {
+                    thatOne.push(moreMoreInfo.cssText);
                     thisOne.push(selectorText);
                 }
 
@@ -98,10 +95,9 @@ app_core.css_scrape = function () {
             }
 
             main = mashUp;
-        } catch (e) {
-            console.warn(`Catch during initial scrape: \n${e}`);
-            continue;
         }
+    } catch (e) {
+        console.warn(`Catch during initial scrape: \n${e}`);
     }
 
     return main;
