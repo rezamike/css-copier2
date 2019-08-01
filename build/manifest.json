@@ -2,6 +2,7 @@
   "name": "CSS Copier",
   "version": "1.0",
   "manifest_version": 2,
+  "description": "When editing CSS through the Chrome Developer Tools, you’re editing multiple elements at once. Sometimes you forget which elements you made changes to, so you end up having to sift through all of the elements to find your changes. CSS Copier is an extension that tracks those changes you’ve made, and organizes it so you can just copy and paste it into your stylesheet quick and efficiently.",
   "browser_action": {
     "default_popup": "index.html"
   },

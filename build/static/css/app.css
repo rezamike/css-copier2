@@ -1,2 +1,2 @@
-#my-extension-root{width:25%;height:100vh;position:fixed;top:0;right:0;z-index:2147483647;box-shadow:0 0 5px rgba(0,0,0,.62)}#my-extension-root,.App{background-color:#708090}.App{margin:0;height:460px;width:375px}
+#my-extension-root{width:25%;height:100vh;position:fixed;top:0;right:0;z-index:2147483647;box-shadow:0 0 5px rgba(0,0,0,.62)}#my-extension-root,.App{background-color:#708090}.App{box-sizing:border-box;margin:0;height:460px;width:375px}
 /*# sourceMappingURL=app.css.map */
