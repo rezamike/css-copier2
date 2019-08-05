@@ -37,8 +37,8 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.message === 'start_scrape') {
-      var data = app_core.css_scrape();
-      app_core.save_scrape(data);
+      var scrape_data = app_core.css_scrape();
+      app_core.save_scrape(scrape_data);
     }
   });
 
