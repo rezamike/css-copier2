@@ -4,6 +4,8 @@ var app_core = {};
 
 // to store initial scrape on 'start' press
 app_core.save_scrape = function (data) {
+    console.trace('app_core.save_scrape()');
+
     var theValue = data;
 
     if (!theValue) {
@@ -20,6 +22,8 @@ app_core.save_scrape = function (data) {
 
 // to save and catalog final scrape on 'stop' press
 app_core.final_scrape = function (data) {
+    console.trace('app_core.final_scrape()');
+
     var theValue = data;
     var version = 1;
     var site = window.location.host;
@@ -42,6 +46,8 @@ app_core.final_scrape = function (data) {
 
 // to pull from local storage based on key (catalog)
 app_core.from_storage = function () {
+    console.trace('app_core.from_storage()');
+
     chrome.storage.local.get(['key'], function (result) {
         app_core.compare_data(result.key);
     });
@@ -49,6 +55,8 @@ app_core.from_storage = function () {
 
 // to pull previous scrape and compare to end scrape per 'stop' press
 app_core.compare_data = function (data) {
+    console.trace('app_core.compare_data()');
+
     var newData = app_core.css_scrape();
     var updatedCSS = {};
 
@@ -65,46 +73,79 @@ app_core.compare_data = function (data) {
 
 // the main scraping functionality
 app_core.css_scrape = function () {
+    console.trace('app_core.css_scrape()');
+
     var info = document.styleSheets;
-    var moreInfo;
-    var moreMoreInfo;
-    var selectorText;
-    var main;
-    var thisOne = [];
-    var thatOne = [];
-    var mashUp = {};
+    var cssRules;
+    var cssStyles;
+    var elementTag;
+    var main = {};
 
-    try {
-        for (var i = 0; i < info.length; i++) {
 
-            moreInfo = info[i].rules;
+    for (var i = 0; i < info.length; i++) {
+        try {
+            cssRules = info[i].rules;
 
-            console.log(moreInfo, i)
-            for (var j = 0; j < moreInfo.length; j++) {
-                moreMoreInfo = moreInfo[j].style;
-                selectorText = moreInfo[j].selectorText;
+            console.log(cssRules, i)
+            for (var j = 0; j < cssRules.length; j++) {
+                cssStyles = cssRules[j].style;
+                elementTag = cssRules[j].selectorText;
 
-                if (typeof moreMoreInfo !== 'undefined' && (typeof selectorText !== 'undefined' || selectorText != null)) {
-                    console.log(moreMoreInfo.cssText, selectorText, j)
+                if (typeof cssStyles !== 'undefined' && (typeof elementTag !== 'undefined' || elementTag != null)) {
+                    console.log(cssStyles.cssText, elementTag, j)
 
-                    thatOne.push(moreMoreInfo.cssText);
-                    thisOne.push(selectorText);
+                    main[elementTag] = cssStyles['cssText'];
                 }
-
-                mashUp[thisOne[j]] = thatOne[j];
             }
 
-            main = mashUp;
+            console.log(main);
+        } catch (e) {
+            console.warn(`Catch during initial scrape: \n${e}`);
         }
-    } catch (e) {
-        console.warn(`Catch during initial scrape: \n${e}`);
     }
-
-    return main;
+    // return main;
 };
+
+// app_core.css_scrape = function () {
+//     const info = document.styleSheets;
+//     var moreInfo;
+//     var moreMoreInfo;
+//     var selectorText;
+
+//     var selectorStyle;
+//     var main = {};
+//     var thisOne = [];
+//     var thatOne = [];
+//     var mashUp = {};
+
+//     for (var i = 0; i < info.length; i++) {
+
+//         try {
+//             if (info[i].href.indexOf(window.location.host) !== -1) {
+//                 moreInfo = info[i].rules;
+
+//                 for (var j = 0; j < moreInfo.length; j++) {
+//                     selectorText = moreInfo[j].selectorText;
+//                     selectorStyle = moreInfo[j].style;
+
+//                     if (typeof selectorStyle !== "undefined") {
+//                         console.log("CHECK CHECK ....... ", selectorText, 'STYLE.....', selectorStyle["cssText"]);
+//                         main[selectorText] = selectorStyle["cssText"];
+//                     }
+//                 }
+//             }
+//         } catch (e) {
+//             console.warn("Can't read the css rules of: " + info[i].href, e);
+//             continue;
+//         }
+//     }
+//     console.log(main);
+// };
 
 // to toggle dom based injection for results screen
 app_core.toggle = function (app_var) {
+    console.trace('app_core.toggle()');
+
     if (app_var.style.display === 'none') {
         app_var.style.display = 'block';
     } else {
@@ -114,6 +155,8 @@ app_core.toggle = function (app_var) {
 
 // to call the message from 'button' press - chrome necessary
 app_core.trigger_slider = function () {
+    console.trace('app_core.trigger_slider()');
+
     chrome.tabs.query({
             active: true,
             currentWindow: true
@@ -128,6 +171,8 @@ app_core.trigger_slider = function () {
 
 // to call the message from 'start' press - chrome necessary
 app_core.start_scrape = function () {
+    console.trace('app_core.start_scrape()');
+
     chrome.tabs.query({
             active: true,
             currentWindow: true
@@ -142,6 +187,8 @@ app_core.start_scrape = function () {
 
 // to call the message from 'stop' press - chrome necessary
 app_core.save_diff = function () {
+    console.trace('app_core.save_diff()');
+
     chrome.tabs.query({
             active: true,
             currentWindow: true
