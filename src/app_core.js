@@ -1,6 +1,7 @@
 /*global chrome*/
 
 var app_core = {};
+app_core.results = [];
 
 // to store initial scrape on 'start' press
 app_core.save_scrape = function (data) {
@@ -20,28 +21,62 @@ app_core.save_scrape = function (data) {
     });
 };
 
+// token generator
+app_core.token_gen = function () {
+    var stringLength = 15;
+    var stringArray = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '!', '?'];
+    var rndString = "";
+
+    for (var i = 1; i < stringLength; i++) {
+        var rndNum = Math.ceil(Math.random() * stringArray.length) - 1;
+        rndString = rndString + stringArray[rndNum];
+    };
+
+    return rndString;
+};
+
 // to save and catalog final scrape on 'stop' press
 app_core.final_scrape = function (data) {
     console.trace('app_core.final_scrape()');
 
     var theValue = data;
-    var version = 1;
+    var date = new Date();
     var site = window.location.host;
-    var newKey = `${site} version: ${version}`;
+    var newKey = `${date} | ${site}`;
+    var token = app_core.token_gen();
+    var key = 1;
 
     theValue['site'] = site;
-    theValue['version'] = version;
+    theValue['date'] = date.toDateString();
+    theValue['token'] = token;
 
     if (!theValue) {
         console.warn('Error: No value specified');
         return;
     }
 
+    var valObject = {
+        [key]: theValue
+    };
+
+    chrome.storage.local.remove(['key']);
+
+    // if (chrome.storage.local.get([key]) ) {
+
+    // }
     chrome.storage.local.set({
-        [newKey]: theValue
+        valObject
     }, function () {
         console.log('Final comparison saved', theValue);
+
+        app_core.results = Object.keys(valObject).map(function (key) {
+            if (typeof valObject[key] != NaN) {
+                return [Number(key), valObject[key]];
+            }
+        });
     });
+
+    console.log(app_core.results);
 };
 
 // to pull from local storage based on key (catalog)
@@ -53,6 +88,43 @@ app_core.from_storage = function () {
     });
 };
 
+// to show from local storage to list
+// app_core.show_list = function () {
+//     console.trace('app_core.show_list()');
+
+//     chrome.storage.local.get(['key'], function (result) {
+//         try {
+//             console.log(result, "raw");
+//             console.log(result.key, "key");
+
+//             var resultArr = Object.keys(result).map(function (key) {
+//                 return [Number(key), result[key]];
+//             });
+
+//             console.log(resultArr);
+//         } catch (e) {
+//             console.log(e);
+//         }
+//     });
+// };
+
+// to compare strings of data compare for data to storage
+// app_core.string_compare = function(a, b) {
+//     var i = 0;
+//     var j = 0;
+//     var result = "";
+
+//     while (j < b.length) {
+//         if (a[i] != b[j] || i == a.length) {
+//             result += b[j];
+//         } else {
+//             i++;
+//         }
+//         j++;
+//     }
+//     return result;
+// };
+
 // to pull previous scrape and compare to end scrape per 'stop' press
 app_core.compare_data = function (data) {
     console.trace('app_core.compare_data()');
@@ -63,6 +135,7 @@ app_core.compare_data = function (data) {
     for (var selector in newData) {
         if (data.hasOwnProperty(selector)) {
             if (newData[selector] != data[selector]) {
+
                 updatedCSS[selector] = newData[selector];
             }
         }
@@ -86,61 +159,23 @@ app_core.css_scrape = function () {
         try {
             cssRules = info[i].rules;
 
-            console.log(cssRules, i)
             for (var j = 0; j < cssRules.length; j++) {
                 cssStyles = cssRules[j].style;
                 elementTag = cssRules[j].selectorText;
 
                 if (typeof cssStyles !== 'undefined' && (typeof elementTag !== 'undefined' || elementTag != null)) {
-                    console.log(cssStyles.cssText, elementTag, j)
 
                     main[elementTag] = cssStyles['cssText'];
                 }
             }
 
-            console.log(main);
         } catch (e) {
             console.warn(`Catch during initial scrape: \n${e}`);
         }
     }
-    // return main;
+    console.log(main);
+    return main;
 };
-
-// app_core.css_scrape = function () {
-//     const info = document.styleSheets;
-//     var moreInfo;
-//     var moreMoreInfo;
-//     var selectorText;
-
-//     var selectorStyle;
-//     var main = {};
-//     var thisOne = [];
-//     var thatOne = [];
-//     var mashUp = {};
-
-//     for (var i = 0; i < info.length; i++) {
-
-//         try {
-//             if (info[i].href.indexOf(window.location.host) !== -1) {
-//                 moreInfo = info[i].rules;
-
-//                 for (var j = 0; j < moreInfo.length; j++) {
-//                     selectorText = moreInfo[j].selectorText;
-//                     selectorStyle = moreInfo[j].style;
-
-//                     if (typeof selectorStyle !== "undefined") {
-//                         console.log("CHECK CHECK ....... ", selectorText, 'STYLE.....', selectorStyle["cssText"]);
-//                         main[selectorText] = selectorStyle["cssText"];
-//                     }
-//                 }
-//             }
-//         } catch (e) {
-//             console.warn("Can't read the css rules of: " + info[i].href, e);
-//             continue;
-//         }
-//     }
-//     console.log(main);
-// };
 
 // to toggle dom based injection for results screen
 app_core.toggle = function (app_var) {
