@@ -45,19 +45,24 @@ app_core.final_scrape = function (newData) {
     var newKey = `${date} | ${site}`;
     var token = app_core.token_gen();
     var key = 1;
-
-    let saveData = JSON.stringify(newData);
-    saveData = saveData.replace(/"/g, '');
-    saveData = saveData.replace('{', '');
-    saveData = saveData.replace('}', '');
-    saveData = saveData.replace(':', ' { ');
-    saveData = saveData.replace(/$/g, ' }');
+    var data = JSON.stringify(newData).split(",");
 
     theValue[`_changes`] = {};
-    theValue[`_changes`][key] = saveData;
     theValue[`_host_site`] = site;
     theValue[`_date`] = date.toDateString();
     theValue[`_change_token`] = token;
+
+    for (var i = 0; i < data.length; i++) {
+        let saveData = data[i];
+        saveData = saveData.replace(/"/g, '');
+        saveData = saveData.replace('{', '');
+        saveData = saveData.replace('}', '');
+        saveData = saveData.replace(':', ' { ');
+        saveData = saveData.replace(/$/g, ' }');
+
+        theValue[`_changes`][key] = saveData;
+        key++;
+    }
 
     if (!theValue) {
         console.warn('Error: No value specified');
@@ -65,14 +70,6 @@ app_core.final_scrape = function (newData) {
     }
 
     chrome.storage.local.remove(['key']);
-
-    chrome.storage.local.get(function(result) {
-        for (var i = 0; i < result.length; i++) {
-            if (result[i] < key) {
-                key++;
-            }
-        }
-    });
 
     chrome.storage.local.set({
         [key]: theValue
