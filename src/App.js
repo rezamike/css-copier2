@@ -60,19 +60,8 @@ function App() {
       <Grid container style={{ height: '60%', overflow: 'hidden', justifyContent: 'center' }}>
         <Grid item xs={10}>
           <Paper style={{margin: '5% 0', width: '100%', height: '25%', overflow: 'auto'}}>
-            <List subheader={<li />}>
-              {[0, 1, 2, 3, 4].map(sectionId => (
-                <li key={`section-${sectionId}`} style={styles.listSection}>
-                  <ul style={styles.ul}>
-                    <ListSubheader>{`I'm sticky ${sectionId}`}</ListSubheader>
-                    {[0, 1, 2].map(item => (
-                      <ListItem key={`item-${sectionId}-${item}`}>
-                        <ListItemText primary={`Item ${item}`} />
-                      </ListItem>
-                    ))}
-                  </ul>
-                </li>
-              ))}
+            <List>
+              {app_core.show_list}
             </List>
           </Paper>
         </Grid>
