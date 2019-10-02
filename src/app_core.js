@@ -39,16 +39,24 @@ app_core.token_gen = function () {
 app_core.final_scrape = function (data) {
     console.trace('app_core.final_scrape()');
 
-    var theValue = data;
+    var theValue = {};
     var date = new Date();
     var site = window.location.host;
     var newKey = `${date} | ${site}`;
     var token = app_core.token_gen();
     var key = 1;
 
-    theValue['site'] = site;
-    theValue['date'] = date.toDateString();
-    theValue['token'] = token;
+    let saveData = JSON.stringify(data);
+    saveData = saveData.replace(/"/g, '');
+    saveData = saveData.replace('{', '');
+    saveData = saveData.replace('}', '');
+    saveData = saveData.replace(':', '{ \n');
+    saveData = saveData.replace(/$/g, ' }');
+
+    theValue[`_changes`] = saveData;
+    theValue[`_host_site`] = site;
+    theValue[`_date`] = date.toDateString();
+    theValue[`_change_token`] = token;
 
     if (!theValue) {
         console.warn('Error: No value specified');
