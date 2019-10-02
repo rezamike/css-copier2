@@ -121,12 +121,48 @@ app_core.compare_data = function (data) {
         if (data.hasOwnProperty(selector)) {
             if (newData[selector] != data[selector]) {
 
-                updatedCSS[selector] = newData[selector];
+              updatedCSS[selector] = app_core.compare_css(data[selector], newData[selector]);
             }
         }
     }
     app_core.final_scrape(updatedCSS, newData); 
 };
+
+// compare each style values
+app_core.compare_css = function (oldCSS, newCSS) {
+  var oldCssStyles = app_core.convert_str_to_obj(oldCSS);
+  var newCssStyles = app_core.convert_str_to_obj(newCSS);
+  var finalCss = [];
+
+  for (var style in newCssStyles) {
+    if (oldCssStyles.hasOwnProperty(style)) {
+      if (newCssStyles[style] !== oldCssStyles[style]) {
+        finalCss.push(`${style}: ${newCssStyles[style]}`);
+      }
+    } else {
+      finalCss.push(`${style}: ${newCssStyles[style]}`);
+    }
+  }
+
+  return finalCss.join("; ") + ";";
+}
+
+// convert style str into an object
+app_core.convert_str_to_obj = function (str) {
+  var styleArr = str.split(';');
+  var styleObj = {};
+
+  for (var style = 0; style < styleArr.length; style++) {
+    var prop = styleArr[style].split(': ')[0];
+    var value = styleArr[style].split(': ')[1];
+
+    if (prop !== '') {
+      styleObj[prop.trim()] = value;
+    }
+  }
+
+  return styleObj;
+}
 
 // the main scraping functionality
 app_core.css_scrape = function () {
