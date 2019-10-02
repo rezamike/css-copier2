@@ -55,28 +55,21 @@ app_core.final_scrape = function (data) {
         return;
     }
 
-    var valObject = {
-        [key]: theValue
-    };
-
     chrome.storage.local.remove(['key']);
 
-    // if (chrome.storage.local.get([key]) ) {
-
-    // }
-    chrome.storage.local.set({
-        valObject
-    }, function () {
-        console.log('Final comparison saved', theValue);
-
-        app_core.results = Object.keys(valObject).map(function (key) {
-            if (typeof valObject[key] != NaN) {
-                return [Number(key), valObject[key]];
+    chrome.storage.local.get(function(result) {
+        for (var i = 0; i < result.length; i++) {
+            if (result[i] < key) {
+                key++;
             }
-        });
+        }
     });
 
-    console.log(app_core.results);
+    chrome.storage.local.set({
+        [key]: theValue
+    }, function () {
+        console.log('Final comparison saved', theValue);
+    });
 };
 
 // to pull from local storage based on key (catalog)
