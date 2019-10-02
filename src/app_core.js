@@ -36,7 +36,7 @@ app_core.token_gen = function () {
 };
 
 // to save and catalog final scrape on 'stop' press
-app_core.final_scrape = function (data) {
+app_core.final_scrape = function (newData) {
     console.trace('app_core.final_scrape()');
 
     var theValue = {};
@@ -46,14 +46,15 @@ app_core.final_scrape = function (data) {
     var token = app_core.token_gen();
     var key = 1;
 
-    let saveData = JSON.stringify(data);
+    let saveData = JSON.stringify(newData);
     saveData = saveData.replace(/"/g, '');
     saveData = saveData.replace('{', '');
     saveData = saveData.replace('}', '');
-    saveData = saveData.replace(':', '{ \n');
+    saveData = saveData.replace(':', ' { ');
     saveData = saveData.replace(/$/g, ' }');
 
-    theValue[`_changes`] = saveData;
+    theValue[`_changes`] = {};
+    theValue[`_changes`][key] = saveData;
     theValue[`_host_site`] = site;
     theValue[`_date`] = date.toDateString();
     theValue[`_change_token`] = token;
@@ -90,41 +91,24 @@ app_core.from_storage = function () {
 };
 
 // to show from local storage to list
-// app_core.show_list = function () {
-//     console.trace('app_core.show_list()');
+app_core.show_list = function () {
+    console.trace('app_core.show_list()');
 
-//     chrome.storage.local.get(['key'], function (result) {
-//         try {
-//             console.log(result, "raw");
-//             console.log(result.key, "key");
+    chrome.storage.local.get(['key'], function (result) {
+        try {
+            console.log(result, "raw");
+            console.log(result.key, "key");
 
-//             var resultArr = Object.keys(result).map(function (key) {
-//                 return [Number(key), result[key]];
-//             });
+            var resultArr = Object.keys(result).map(function (key) {
+                return [Number(key), result[key]];
+            });
 
-//             console.log(resultArr);
-//         } catch (e) {
-//             console.log(e);
-//         }
-//     });
-// };
-
-// to compare strings of data compare for data to storage
-// app_core.string_compare = function(a, b) {
-//     var i = 0;
-//     var j = 0;
-//     var result = "";
-
-//     while (j < b.length) {
-//         if (a[i] != b[j] || i == a.length) {
-//             result += b[j];
-//         } else {
-//             i++;
-//         }
-//         j++;
-//     }
-//     return result;
-// };
+            console.log(resultArr);
+        } catch (e) {
+            console.log(e);
+        }
+    });
+};
 
 // to pull previous scrape and compare to end scrape per 'stop' press
 app_core.compare_data = function (data) {
@@ -141,8 +125,7 @@ app_core.compare_data = function (data) {
             }
         }
     }
-
-    app_core.final_scrape(updatedCSS);
+    app_core.final_scrape(updatedCSS, newData); 
 };
 
 // the main scraping functionality
