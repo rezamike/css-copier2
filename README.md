@@ -31,7 +31,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Built Using
 
-![GitHub Logo](https://logoeps.com/wp-content/uploads/2014/05/37318-github-logo-icon-vector-icon-vector-eps-200x200.png) ![React Logo](https://hackr.io/tutorials/learn-react/logo/logo-react?ver=1535019497) ![HTML5 / CSS Logo](http://www.thewebfusion.com/wp-content/uploads/2018/09/Logo-HTML5-CSS3-200.png) ![Yarn Logo](https://miro.medium.com/max/400/1*eOuPXvQtTew_Z2PjSNZN_g.png)  ![Chrome Logo](https://a43d55f6a02c4be185ce-9cfa4cf7c673a59966ad8296f4c88804.ssl.cf3.rackcdn.com/Chrome-Internal-URLs/chrome-logo.png)
+![GitHub Logo](https://cdn.iconscout.com/icon/free/png-128/github-153-675523.png) ![React Logo](https://video-react.js.org/assets/logo.png) ![HTML5 Logo](https://p1.hiclipart.com/preview/455/882/407/apple-keyboard-icons-html5-html-5-logo.jpg) ![CSS3 Logo](https://image.flaticon.com/icons/png/128/246/246884.png) ![Yarn Logo](https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/000/963/square_128/yarn.png)  ![Chrome Logo](https://image.flaticon.com/icons/png/128/226/226776.png)
 
 ## Author
 
